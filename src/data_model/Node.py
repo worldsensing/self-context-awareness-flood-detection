@@ -121,7 +121,7 @@ class Node:
         elif len(index_l) == 0:
             print(f"Next sample warning, no time {index_l}, {t}")
             dt_test = dt_min + 5
-            x0, y0 = self.next_sample(dt_test, df)  # TODO complete
+            x0, y0 = self.get_next_sample(dt_test, df)
             return x0, y0
 
         index = index_l[0]

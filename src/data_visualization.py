@@ -141,10 +141,10 @@ def flood_events(df_node, show=False):
             event_times.append(dt)
             event_node.end_sample_event(True, False, 5, l)
 
-    # TODO Fix X labels for Sample Number instead of 0 to 1
+    event_time_days = np.array(event_times) / (60 * 24)
     plt.figure(figsize=(10, 8))
-    plt.plot(event_times, event_levels, 'k')
-    plt.xlabel("Sample Number", fontsize=16)
+    plt.plot(event_time_days, event_levels, 'k')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
     plt.ylabel("Water Level (m)", fontsize=16)
     plt.axhline(y=event_node.threshold_on, color='r', linestyle='-', label="Threshold - ON")
     plt.axhline(y=event_node.threshold_off, color='g', linestyle='-', label="Threshold - OFF")
@@ -153,11 +153,11 @@ def flood_events(df_node, show=False):
     add_item_flood_ends_in_legend = True
     for i in range(len(event_node.events)):
         if 'started' == event_node.event_meaning[i]:
-            plt.axvline(x=event_node.events[i], color='b', linestyle='-',
+            plt.axvline(x=event_node.events[i]/(60*24), color='b', linestyle='-',
                         label="Flood starts" if add_item_flood_starts_in_legend else "")
             add_item_flood_starts_in_legend = False
         else:
-            plt.axvline(x=event_node.events[i], color='b', linestyle='--',
+            plt.axvline(x=event_node.events[i]/(60*24), color='b', linestyle='--',
                         label="Flood ends" if add_item_flood_ends_in_legend else "")
             add_item_flood_ends_in_legend = False
     plt.legend()
@@ -200,7 +200,6 @@ def battery_discharge(naive_times, naive_remaining_charge, node_only_times,
     file_utils.show_plot(plt, show=show)
 
 
-# TODO Should we write this to a file?
 def event_detection_delays(event_node, naive_node, node_only_node, server_only_node, complete_node):
     # Remove short events
     ref_events = []
@@ -230,7 +229,7 @@ def event_detection_delays(event_node, naive_node, node_only_node, server_only_n
     delay_complete = compute_delays(ref_events, complete_node.events)
 
     # TODO Add units or similar, here could be time per ¿?
-    print("Delays:")
+    print("Flood detection delays in minutes:")
     print(f"   Naive:    {delay_naive}")
     print(f"   Node:     {delay_node_only}")
     print(f"   Server:   {delay_server_only}")
@@ -244,16 +243,14 @@ def event_detection_delays(event_node, naive_node, node_only_node, server_only_n
     avg_delay_server_only = average_delay(delay_server_only)
     avg_delay_complete = average_delay(delay_complete)
 
-    # TODO Add units or similar, here could be seconds?
-    print("Delays:")
-    print(f"   Naive:    {avg_delay_naive}")
-    print(f"   Node:     {avg_delay_node_only}")
-    print(f"   Server:   {avg_delay_server_only}")
-    print(f"   Complete: {avg_delay_complete}")
+    print("Average flood detection delays:")
+    print(f"   Naive:    {round(avg_delay_naive, 3)} mins.")
+    print(f"   Node:     {round(avg_delay_node_only, 3)} mins.")
+    print(f"   Server:   {round(avg_delay_server_only, 3)} mins.")
+    print(f"   Complete: {round(avg_delay_complete, 3)} mins.")
 
-    # TODO Add units or similar, here could be %?
     print("Delay improvements:")
-    print(f"   Naive:    {100 * (1 - avg_delay_naive / avg_delay_naive)}")
-    print(f"   Node:     {100 * (1 - avg_delay_node_only / avg_delay_naive)}")
-    print(f"   Server:   {100 * (1 - avg_delay_server_only / avg_delay_naive)}")
-    print(f"   Complete: {100 * (1 - avg_delay_complete / avg_delay_naive)}")
+    print(f"   Naive:    {round(100 * (1 - avg_delay_naive / avg_delay_naive), 1)}%")
+    print(f"   Node:     {round(100 * (1 - avg_delay_node_only / avg_delay_naive), 1)}%")
+    print(f"   Server:   {round(100 * (1 - avg_delay_server_only / avg_delay_naive), 1)}%")
+    print(f"   Complete: {round(100 * (1 - avg_delay_complete / avg_delay_naive), 1)}%")

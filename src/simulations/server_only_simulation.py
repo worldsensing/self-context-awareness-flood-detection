@@ -2,7 +2,7 @@ from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
 from src.utils import file_utils
-
+import numpy as np
 
 def server_only_simulation(df_node, show=False):
     from main import WATER_LEVEL_THRESHOLD_ON, WATER_LEVEL_THRESHOLD_OFF
@@ -17,8 +17,8 @@ def server_only_simulation(df_node, show=False):
         in_event = nd.in_event
         if in_event:  # a Flood event is active
             sampling_rate = 5 * 3
-        elif level < nd.threshold_on:  # high level
-            sampling_rate = 5 * 18  # 15min
+        elif level < nd.threshold_on:
+            sampling_rate = 5 * 18
         else:
             sampling_rate = 5 * 3
 
@@ -55,38 +55,38 @@ def server_only_simulation(df_node, show=False):
             sampling_rate, transmission, reception = _server_only_get_sampling_rate(
                 server_only_node, p, l)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
+
+    server_only_time_days = np.array(server_only_times) / (60 * 24)
     plt.figure()
-    plt.title("Server-Only Samples")
-    plt.plot(server_only_samples, '.')
-    file_utils.save_plot(plt, "server_only__samples")
+    plt.title("Context-Aware Samples")
+    plt.plot(server_only_time_days, server_only_samples, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "context__samples")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Server-Only Predictions")
-    plt.plot(server_only_predictions, '.')
-    file_utils.save_plot(plt, "server_only__predictions")
+    plt.title("Context-Aware Predictions")
+    plt.plot(server_only_time_days, server_only_predictions, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Predicted Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "context__predictions")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Server-Only Levels")
-    plt.plot(server_only_levels, '.')
-    file_utils.save_plot(plt, "server_only__levels")
+    plt.title("Context-Aware Levels")
+    plt.plot(server_only_time_days, server_only_levels, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "context__levels")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Server-Only Remaining Charge")
+    plt.title("Context-Aware Remaining Battery Charge")
+    plt.xlabel("Monitoring Time (days)")
     plt.ylabel("Remaining Battery Charge (mAh)")
-    plt.plot(server_only_remaining_charge)
-    file_utils.save_plot(plt, "server_only__remaining_charge")
+    plt.plot(server_only_time_days, server_only_remaining_charge[1:])
+    file_utils.save_plot(plt, "context__remaining_charge")
     file_utils.show_plot(plt, show=show)
-
-    # TODO We do not show here full simulation for server_only?
 
     return server_only_node, server_only_times, server_only_remaining_charge
