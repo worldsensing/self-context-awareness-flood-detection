@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
+from src.utils import file_utils
 
 
 def node_and_server_simulation(df_node, show=False):
@@ -133,20 +134,38 @@ def node_and_server_simulation(df_node, show=False):
             sampling_rate, transmission, reception = _node_and_server_get_sampling_rate(
                 complete_node, p, l)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Node-and-Server Samples")
     plt.plot(complete_samples, '.')
-    plt.show()
+    file_utils.save_plot(plt, "node_and_server__samples")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Node-and-Server Predictions")
     plt.plot(complete_predictions, '.')
-    plt.show()
+    file_utils.save_plot(plt, "node_and_server__predictions")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Node-and-Server Levels")
     plt.plot(complete_levels, '.')
-    plt.show()
+    file_utils.save_plot(plt, "node_and_server__levels")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Node-and-Server Remaining Charge")
+    plt.ylabel("Remaining Battery Charge (mAh)")
     plt.plot(complete_remaining_charge)
-    plt.show()
+    file_utils.save_plot(plt, "node_and_server__remaining_charge")
+    file_utils.show_plot(plt, show=show)
+
+    # TODO We do not show here full simulation for node_and_server?
 
     return complete_node, complete_times, complete_remaining_charge

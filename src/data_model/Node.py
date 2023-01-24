@@ -5,25 +5,21 @@ from sklearn.linear_model import LinearRegression
 
 from src.utils.time_utils import HOURS_TO_SECONDS
 
-# --- Node data ---
 _battery_charge = 5000  # Battery charge in mAh
-_idle_current = 73.3 / 1000  # Idle current in mA.
-_sampling_current = 6.52  # Sampling and processing current mA.
+_idle_current = 73.3 / 1000  # Idle current in mA
+_sampling_current = 6.52  # Sampling and processing current mA
 _sampling_time = 1.725502  # Sampling and processing time in s
 _sampling_charge = _sampling_current * _sampling_time / HOURS_TO_SECONDS
-_trans_current = 9.48  # Transmission and processing mA.
+_trans_current = 9.48  # Transmission and processing mA
 _trans_time = 7.64409  # Average transmission time s
 _trans_charge = _trans_current * _trans_time / HOURS_TO_SECONDS
 _reception_charge = _trans_charge
 
-# --- Flood data ---
-_train_len = 200000  # Modify this in the code as it will be a range
-
 
 class Node:
     def __init__(self, water_level_threshold_on, water_level_threshold_off):
-        print(f"Sampling and processing charge {_sampling_charge}")
-        print(f"Data transmission reception charge {_trans_charge}")
+        #print(f"Sampling and processing charge {_sampling_charge}")
+        #print(f"Data transmission reception charge {_trans_charge}")
         self.battery_charge_initial = _battery_charge
         self.battery_charge_remaining = _battery_charge
         self.idle_current = _idle_current

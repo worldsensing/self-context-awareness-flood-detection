@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
+from src.utils import file_utils
 
 
 def node_only_simulation(df_node, show=False):
@@ -73,20 +74,38 @@ def node_only_simulation(df_node, show=False):
             node_only_remaining_charge.append(node_only_node.battery_charge_remaining)
             sampling_rate, transmission, reception = get_sampling_rate(node_only_node, p, l)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Node-Only Samples")
     plt.plot(node_only_samples, '.')
-    plt.show()
+    file_utils.save_plot(plt, "node_only__samples")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Node-Only Predictions")
     plt.plot(node_only_predictions, '.')
-    plt.show()
+    file_utils.save_plot(plt, "node_only__predictions")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Node-Only Levels")
     plt.plot(node_only_levels, '.')
-    plt.show()
+    file_utils.save_plot(plt, "node_only__levels")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Node-Only Remaining Charge")
+    plt.ylabel("Remaining Battery Charge (mAh)")
     plt.plot(node_only_remaining_charge)
-    plt.show()
+    file_utils.save_plot(plt, "node_only__remaining_charge")
+    file_utils.show_plot(plt, show=show)
+
+    # TODO We do not show here full simulation for node_only?
 
     return node_only_node, node_only_times, node_only_remaining_charge

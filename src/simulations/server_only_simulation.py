@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
+from src.utils import file_utils
 
 
 def server_only_simulation(df_node, show=False):
@@ -54,20 +55,38 @@ def server_only_simulation(df_node, show=False):
             sampling_rate, transmission, reception = _server_only_get_sampling_rate(
                 server_only_node, p, l)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Server-Only Samples")
     plt.plot(server_only_samples, '.')
-    plt.show()
+    file_utils.save_plot(plt, "server_only__samples")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Server-Only Predictions")
     plt.plot(server_only_predictions, '.')
-    plt.show()
+    file_utils.save_plot(plt, "server_only__predictions")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in X axis?
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Server-Only Levels")
     plt.plot(server_only_levels, '.')
-    plt.show()
+    file_utils.save_plot(plt, "server_only__levels")
+    file_utils.show_plot(plt, show=show)
 
+    # TODO Fix what is shown in Y axis?
     plt.figure()
+    plt.title("Server-Only Remaining Charge")
+    plt.ylabel("Remaining Battery Charge (mAh)")
     plt.plot(server_only_remaining_charge)
-    plt.show()
+    file_utils.save_plot(plt, "server_only__remaining_charge")
+    file_utils.show_plot(plt, show=show)
+
+    # TODO We do not show here full simulation for server_only?
 
     return server_only_node, server_only_times, server_only_remaining_charge
