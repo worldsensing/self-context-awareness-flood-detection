@@ -3,7 +3,7 @@ from datetime import timedelta
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-from src.time_utils import HOURS_TO_SECONDS
+from src.utils.time_utils import HOURS_TO_SECONDS
 
 # --- Node data ---
 _battery_charge = 5000  # Battery charge in mAh
@@ -17,7 +17,7 @@ _trans_charge = _trans_current * _trans_time / HOURS_TO_SECONDS
 _reception_charge = _trans_charge
 
 # --- Flood data ---
-_train_len = 200000  # Modify this in the code as it will be a range.
+_train_len = 200000  # Modify this in the code as it will be a range
 
 
 class Node:
@@ -61,6 +61,7 @@ class Node:
         if reception:
             total_charge += self.reception_charge
         self.battery_charge_remaining -= total_charge
+
         return self.battery_charge_remaining <= 0
 
     def start_events(self, df):
@@ -74,12 +75,12 @@ class Node:
         self.model.fit(x, y)
 
     def init_sampling(self, df: pd.DataFrame):
-        # get training data
-        x = df['Flow'].to_numpy()[350000:].reshape(-1, 1)  # TODO Convert 350000 to variable
+        # training data
+        x = df['Flow'].to_numpy()[350000:].reshape(-1, 1)
         y = df['Level'].to_numpy()[350000:]
         self.train_model(x, y)
 
-        df_out = df.iloc[150000:350000].copy()  # TODO Convert 350000 to variable
+        df_out = df.iloc[150000:350000].copy()
         df_out.reset_index(drop=True, inplace=True)
         x_out = df_out['Flow'].to_numpy().reshape(-1, 1)
         df_out['prediction'] = self.model.predict(x_out)
@@ -96,6 +97,7 @@ class Node:
         self.n = 1
         self.tend = df_out['TimeNew'].iloc[-1]
         self.start_events(df_out)
+
         return df_out, x0, y0, t0, l0
 
     def update_prediction_stats(self, p):
@@ -135,13 +137,8 @@ class Node:
         self.dt += dt_min
         self.update_prediction_stats(pred)
         self.update_level_stats(level)
+
         return flow, pred, level, self.dt, True
-
-    def get_pred_stats(self):
-        return self.prediction_mean, self.prediction_std
-
-    def get_level_stats(self):
-        return self.level_mean
 
     def detect_event(self, level):
         if self.in_event:

@@ -12,6 +12,15 @@ def read_csv(file_path, verbose=True):
     return file
 
 
+def show_plot(plt, show=True):
+    if show:
+        plt.show()
+    else:
+        plt.clf()
+        plt.cla()
+        plt.close()
+
+
 def save_plot(plt, file_path):
     dt_string = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
 

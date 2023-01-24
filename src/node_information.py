@@ -1,23 +1,10 @@
-import matplotlib.dates as mdates
 import numpy as np
 from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
 
 
-def test_show_time(df_node, time_column):
-    dates = df_node[time_column].to_numpy()
-    y = df_node['Level'].to_numpy()
-
-    plt.figure(figsize=(16, 10))
-    plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m'))
-    plt.gca().xaxis.set_major_locator(mdates.YearLocator())
-    plt.plot(dates, y, "*")
-    plt.gcf().autofmt_xdate()
-    plt.show()
-
-
-def flood_events(df_node):
+def flood_events(df_node, show=False):
     from main import WATER_LEVEL_THRESHOLD_ON, WATER_LEVEL_THRESHOLD_OFF
 
     event_node = Node(WATER_LEVEL_THRESHOLD_ON, WATER_LEVEL_THRESHOLD_OFF)
@@ -71,7 +58,7 @@ def flood_events(df_node):
 def plot_results(naive_times, naive_remaining_charge, node_only_times, node_only_remaining_charge,
                  server_only_times, server_only_remaining_charge, complete_times,
                  complete_remaining_charge, event_node, naive_node, node_only_node,
-                 server_only_node, complete_node):
+                 server_only_node, complete_node, show=False):
     test_names = ['Naive', 'Self-awareness', 'Context-awareness', 'Self-Context-awareness']
 
     plt.figure(figsize=(8, 5))
