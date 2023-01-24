@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
+from src.utils import file_utils
 
 
 def flood_events(df_node, show=False):
@@ -9,7 +10,7 @@ def flood_events(df_node, show=False):
 
     event_node = Node(WATER_LEVEL_THRESHOLD_ON, WATER_LEVEL_THRESHOLD_OFF)
     df_events, x0, y0, _, _ = event_node.init_sampling(df_node)
-    event_simulation_running = np.True_
+    event_simulation_running = True
     event_levels = [y0]
     event_times = [0]
     while event_simulation_running:
@@ -19,46 +20,38 @@ def flood_events(df_node, show=False):
             event_times.append(dt)
             event_node.end_sample_event(True, False, 5, l)
 
-    plt.figure(figsize=(16, 10))
+    plt.figure(figsize=(10, 8))
     plt.plot(event_times, event_levels, 'k')
-    plt.axhline(y=event_node.threshold_on, color='r', linestyle='-')
-    plt.axhline(y=event_node.threshold_off, color='r', linestyle='--')
+    plt.xlabel("Sample Number", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
+    plt.axhline(y=event_node.threshold_on, color='r', linestyle='-', label="Threshold - ON")
+    plt.axhline(y=event_node.threshold_off, color='g', linestyle='-', label="Threshold - OFF")
+
+    # TODO Fix X labels for Sample Number instead of 0 to 1
+    add_item_flood_starts_in_legend = True
+    add_item_flood_ends_in_legend = True
     for i in range(len(event_node.events)):
         if 'started' == event_node.event_meaning[i]:
-            plt.axvline(x=event_node.events[i], color='g', linestyle='-')
+            plt.axvline(x=event_node.events[i], color='b', linestyle='-',
+                        label="Flood starts" if add_item_flood_starts_in_legend else "")
+            add_item_flood_starts_in_legend = False
         else:
-            plt.axvline(x=event_node.events[i], color='b', linestyle='-')
-    plt.show()
+            plt.axvline(x=event_node.events[i], color='b', linestyle='--',
+                        label="Flood ends" if add_item_flood_ends_in_legend else "")
+            add_item_flood_ends_in_legend = False
+    plt.legend()
 
-    event_list = []
-    _event_size_filter = 1
-    in_event = df_events['Level'].iloc[0] >= WATER_LEVEL_THRESHOLD_ON
-    for n in range(len(df_events) - _event_size_filter):
-        if in_event:
-            if np.all(df_events['Level'].to_numpy()[n:n + _event_size_filter]
-                      < WATER_LEVEL_THRESHOLD_OFF):
-                event_list.append(n)
-                in_event = False
-        else:
-            if np.all(df_events['Level'].to_numpy()[n:n + 1] >= WATER_LEVEL_THRESHOLD_ON):
-                event_list.append(n)
-                in_event = True
-    print(event_list)
-
-    plt.figure(figsize=(16, 10))
-    plt.plot(df_events['Level'].to_numpy())
-    plt.axhline(y=WATER_LEVEL_THRESHOLD_ON, color='r', linestyle='-')
-    plt.axhline(y=WATER_LEVEL_THRESHOLD_OFF, color='r', linestyle='--')
-    for e in event_list:
-        plt.axvline(x=e, color='g', linestyle='-')
+    file_utils.save_plot(plt, "flood_events")
+    file_utils.show_plot(plt, show=show)
 
     return event_node
 
 
-def plot_results(naive_times, naive_remaining_charge, node_only_times, node_only_remaining_charge,
-                 server_only_times, server_only_remaining_charge, complete_times,
-                 complete_remaining_charge, event_node, naive_node, node_only_node,
-                 server_only_node, complete_node, show=False):
+def simulation_results(naive_times, naive_remaining_charge, node_only_times,
+                       node_only_remaining_charge, server_only_times,
+                       server_only_remaining_charge, complete_times,
+                       complete_remaining_charge, event_node, naive_node, node_only_node,
+                       server_only_node, complete_node, show=False):
     test_names = ['Naive', 'Self-awareness', 'Context-awareness', 'Self-Context-awareness']
 
     plt.figure(figsize=(8, 5))

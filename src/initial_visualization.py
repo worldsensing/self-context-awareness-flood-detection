@@ -70,7 +70,7 @@ def test_linear_regression(df_node, show=False):
     y = df_node['Level'].to_numpy()[START_VALUE:END_VALUE].reshape(-1, 1)
     preds = node_model.predict(x)
 
-    plt.figure(figsize=(16, 10))
+    plt.figure(figsize=(10, 8))
     plt.plot(y, label="Water Level (m)")
     plt.plot(preds, label="Predicted Water Level (m)")
     plt.xlabel("Sample Number", fontsize=18)
@@ -97,7 +97,7 @@ def test_random_forest(df_node, show=False):
     y = df_node['Level'].to_numpy()[START_VALUE:].reshape(-1, 1)
     preds = node_model.predict(x)
 
-    plt.figure(figsize=(16, 10))
+    plt.figure(figsize=(10, 8))
     plt.plot(y, label="Water Level (m)")
     plt.plot(preds, label="Predicted Water Level (m)")
     plt.xlabel("Sample Number", fontsize=18)
@@ -115,7 +115,7 @@ def test_show_time(df_node, time_column, show=False):
     dates = df_node[time_column].to_numpy()
     y = df_node['Level'].to_numpy()
 
-    plt.figure(figsize=(16, 10))
+    plt.figure(figsize=(10, 8))
     plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y/%m'))
     plt.gca().xaxis.set_major_locator(mdates.YearLocator())
     plt.plot(dates, y, "*")

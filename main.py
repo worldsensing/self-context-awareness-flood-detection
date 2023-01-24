@@ -23,13 +23,12 @@ if __name__ == "__main__":
 
     measurements_df = file_utils.read_csv("./csv/River_Levels_and_Flows.csv")
 
-    print("Data Preparation...")
+    print("Data Preparation and Cleaning...")
     df_node = data_preparation.join_stations_and_measurements(measurements_df, SELECTED_STATION)
 
-    df_node = data_preparation.prepare_time_and_timenew_column(df_node)
-
-    print("Data Cleaning...")
     df_node = data_preparation.convert_nan_values(df_node, NAN_VALUES_REMOVED_OR_ZERO)
+
+    df_node = data_preparation.prepare_time_and_timenew_column(df_node)
 
     print("Initial Visualizations...")
     # df_initial_visualization.node_test_display_correlation_flow_level(df_node)
@@ -48,8 +47,8 @@ if __name__ == "__main__":
     print("Naive Visualizations...")
     naive_node, naive_times, naive_remaining_charge = naive_simulation(df_node, show=True)
     print("Node Only Visualizations...")
-    node_only_node, node_only_times, node_only_remaining_charge = node_only_simulation(df_node,
-                                                                                       show=True)
+    node_only_node, node_only_times, node_only_remaining_charge = \
+        node_only_simulation(df_node, show=True)
 
     print("Server Only Visualizations...")
     server_only_node, server_only_times, server_only_remaining_charge = \
@@ -60,7 +59,7 @@ if __name__ == "__main__":
         node_and_server_simulation(df_node, show=True)
 
     print("Final results and comparisons...")
-    node_information.plot_results(
+    node_information.simulation_results(
         naive_times, naive_remaining_charge,
         node_only_times, node_only_remaining_charge,
         server_only_times, server_only_remaining_charge,
