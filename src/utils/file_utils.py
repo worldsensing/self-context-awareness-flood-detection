@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import pandas as pd
 
 
@@ -22,6 +20,4 @@ def show_plot(plt, show=True):
 
 
 def save_plot(plt, file_path):
-    dt_string = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
-
-    plt.savefig(f"./output/{file_path}_{dt_string}.png", bbox_inches='tight')
+    plt.savefig(f"./output/{file_path}.png", bbox_inches='tight')
