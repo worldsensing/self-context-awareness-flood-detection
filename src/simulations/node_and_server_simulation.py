@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
 from src.utils import file_utils
+import numpy as np
 
 
 def node_and_server_simulation(df_node, show=False):
@@ -26,7 +27,7 @@ def node_and_server_simulation(df_node, show=False):
             if in_event:  # a Flood event is active
                 sampling_rate = 5 * 2
                 transmission_thres = 5 * 3
-            elif p < nd.threshold_off:  # high level
+            elif p < nd.threshold_off:
                 sampling_rate = 5 * 9
                 transmission_thres = 5 * 12
             else:
@@ -134,38 +135,37 @@ def node_and_server_simulation(df_node, show=False):
             sampling_rate, transmission, reception = _node_and_server_get_sampling_rate(
                 complete_node, p, l)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
+    complete_time_days = np.array(complete_times) / (60 * 24)
     plt.figure()
-    plt.title("Node-and-Server Samples")
-    plt.plot(complete_samples, '.')
-    file_utils.save_plot(plt, "node_and_server__samples")
+    plt.title("Context-and-Self-Aware Samples")
+    plt.plot(complete_time_days, complete_samples, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "context_and_self__samples")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Node-and-Server Predictions")
-    plt.plot(complete_predictions, '.')
-    file_utils.save_plot(plt, "node_and_server__predictions")
+    plt.title("Context-and-Self-Aware Predictions")
+    plt.plot(complete_time_days, complete_predictions, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Predicted Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "context_and_self__predictions")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Node-and-Server Levels")
-    plt.plot(complete_levels, '.')
-    file_utils.save_plot(plt, "node_and_server__levels")
+    plt.title("Context-and-Self-Aware Levels")
+    plt.plot(complete_time_days, complete_levels, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "context_and_self__levels")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Node-and-Server Remaining Charge")
+    plt.title("Context-and-Self-Aware Remaining Battery Charge")
+    plt.xlabel("Monitoring Time (days)")
     plt.ylabel("Remaining Battery Charge (mAh)")
-    plt.plot(complete_remaining_charge)
-    file_utils.save_plot(plt, "node_and_server__remaining_charge")
+    plt.plot(complete_time_days, complete_remaining_charge[1:])
+    file_utils.save_plot(plt, "context_and_self__remaining_charge")
     file_utils.show_plot(plt, show=show)
-
-    # TODO We do not show here full simulation for node_and_server?
 
     return complete_node, complete_times, complete_remaining_charge
