@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-from src.data_model.Node import Node
+from src.data_model.Node import Node, _battery_charge
 from src.utils import file_utils
 
 
@@ -169,26 +169,35 @@ def flood_events(df_node, show=False):
     return event_node
 
 
-def battery_discharge(naive_times, naive_remaining_charge, node_only_times,
-                      node_only_remaining_charge, server_only_times,
-                      server_only_remaining_charge, complete_times,
-                      complete_remaining_charge, show=False):
+def charge_usage(naive_times, naive_remaining_charge, node_only_times,
+                 node_only_remaining_charge, server_only_times,
+                 server_only_remaining_charge, complete_times,
+                 complete_remaining_charge, show=False):
+
     test_names = ['Naive', 'Self-awareness', 'Context-awareness', 'Self-Context-awareness']
+
+    battery_charge = _battery_charge
+
+    # Translate remaining charge to used charge
+    naive_used_charge = battery_charge - np.array(naive_remaining_charge)
+    node_only_used_charge = battery_charge - np.array(node_only_remaining_charge)
+    server_only_used_charge = battery_charge - np.array(server_only_remaining_charge)
+    complete_used_charge = battery_charge - np.array(complete_remaining_charge)
 
     plt.figure(figsize=(10, 8))
 
     colormap = plt.cm.gist_rainbow  # nipy_spectral, Set1,Paired
     plt.gca().set_prop_cycle(plt.cycler('color', plt.cm.jet(np.linspace(0, 1, len(test_names)))))
 
-    plt.plot(naive_times, naive_remaining_charge[1:], linewidth=2.5, label=test_names[0])
-    plt.plot(node_only_times, node_only_remaining_charge[1:], linewidth=2.5, label=test_names[1])
-    plt.plot(server_only_times, server_only_remaining_charge[1:], linewidth=2.5,
+    plt.plot(naive_times, naive_used_charge[1:], linewidth=2.5, label=test_names[0])
+    plt.plot(node_only_times, node_only_used_charge[1:], linewidth=2.5, label=test_names[1])
+    plt.plot(server_only_times, server_only_used_charge[1:], linewidth=2.5,
              label=test_names[2])
-    plt.plot(complete_times, complete_remaining_charge[1:], linewidth=2.5, label=test_names[3])
+    plt.plot(complete_times, complete_used_charge[1:], linewidth=2.5, label=test_names[3])
 
-    plt.title("Battery Discharge", fontsize=16)
+    plt.title("Used Battery Charge (mAh)", fontsize=16)
     plt.xlabel("Time (minutes)", fontsize=12)
-    plt.ylabel("Remaining battery charge (mAh)", fontsize=12)
+    plt.ylabel("Battery charge Usage (mAh)", fontsize=12)
     # plt.legend(loc="right", fancybox=True, bbox_to_anchor=(1.2, 0.5),
     #           shadow=True, prop={'size':12})
     plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15),
@@ -196,7 +205,7 @@ def battery_discharge(naive_times, naive_remaining_charge, node_only_times,
     plt.tick_params(axis='both', labelsize=12)
     plt.tight_layout()
 
-    file_utils.save_plot(plt, "simulation_results")
+    file_utils.save_plot(plt, "battery_charge_used")
     file_utils.show_plot(plt, show=show)
 
 

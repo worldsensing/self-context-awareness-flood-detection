@@ -60,13 +60,12 @@ if __name__ == "__main__":
         node_and_server_simulation(df_node, show=False)
 
     print("Battery Discharge Comparison...")
-    data_visualization.battery_discharge(
+    data_visualization.charge_usage(
         naive_times, naive_remaining_charge,
         node_only_times, node_only_remaining_charge,
         server_only_times, server_only_remaining_charge,
         complete_times, complete_remaining_charge,
-        show=False
-    )
+        show=False)
 
     print("Event Detection Delays Comparison...")
     data_visualization.event_detection_delays(event_node, naive_node, node_only_node,
