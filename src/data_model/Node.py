@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 
 from src.utils.time_utils import HOURS_TO_SECONDS
 
-_battery_charge = 5000  # Battery charge in mAh
+TOTAL_BATTERY_CHARGE = 5000  # Battery charge in mAh
 _idle_current = 73.3 / 1000  # Idle current in mA
 _sampling_current = 6.52  # Sampling and processing current mA
 _sampling_time = 1.725502  # Sampling and processing time in s
@@ -18,10 +18,10 @@ _reception_charge = _trans_charge
 
 class Node:
     def __init__(self, water_level_threshold_on, water_level_threshold_off):
-        #print(f"Sampling and processing charge {_sampling_charge}")
-        #print(f"Data transmission reception charge {_trans_charge}")
-        self.battery_charge_initial = _battery_charge
-        self.battery_charge_remaining = _battery_charge
+        # print(f"Sampling and processing charge {_sampling_charge}")
+        # print(f"Data transmission reception charge {_trans_charge}")
+        self.battery_charge_initial = TOTAL_BATTERY_CHARGE
+        self.battery_charge_remaining = TOTAL_BATTERY_CHARGE
         self.idle_current = _idle_current
         self.sampling_charge = _sampling_charge
         self.trans_charge = _trans_charge

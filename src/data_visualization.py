@@ -3,7 +3,7 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-from src.data_model.Node import Node, _battery_charge
+from src.data_model import Node
 from src.utils import file_utils
 
 
@@ -129,7 +129,7 @@ def test_show_time(df_node, time_column, show=False):
 def flood_events(df_node, show=False):
     from main import WATER_LEVEL_THRESHOLD_ON, WATER_LEVEL_THRESHOLD_OFF
 
-    event_node = Node(WATER_LEVEL_THRESHOLD_ON, WATER_LEVEL_THRESHOLD_OFF)
+    event_node = Node.Node(WATER_LEVEL_THRESHOLD_ON, WATER_LEVEL_THRESHOLD_OFF)
     df_events, x0, y0, _, _ = event_node.init_sampling(df_node)
     event_simulation_running = True
     event_levels = [y0]
@@ -153,11 +153,11 @@ def flood_events(df_node, show=False):
     add_item_flood_ends_in_legend = True
     for i in range(len(event_node.events)):
         if 'started' == event_node.event_meaning[i]:
-            plt.axvline(x=event_node.events[i]/(60*24), color='b', linestyle='-',
+            plt.axvline(x=event_node.events[i] / (60 * 24), color='b', linestyle='-',
                         label="Flood starts" if add_item_flood_starts_in_legend else "")
             add_item_flood_starts_in_legend = False
         else:
-            plt.axvline(x=event_node.events[i]/(60*24), color='b', linestyle='--',
+            plt.axvline(x=event_node.events[i] / (60 * 24), color='b', linestyle='--',
                         label="Flood ends" if add_item_flood_ends_in_legend else "")
             add_item_flood_ends_in_legend = False
     plt.legend()
@@ -173,10 +173,9 @@ def charge_usage(naive_times, naive_remaining_charge, node_only_times,
                  node_only_remaining_charge, server_only_times,
                  server_only_remaining_charge, complete_times,
                  complete_remaining_charge, show=False):
-
     test_names = ['Naive', 'Self-awareness', 'Context-awareness', 'Self-Context-awareness']
 
-    battery_charge = _battery_charge
+    battery_charge = Node.TOTAL_BATTERY_CHARGE
 
     # Translate remaining charge to used charge
     naive_used_charge = battery_charge - np.array(naive_remaining_charge)
@@ -197,7 +196,7 @@ def charge_usage(naive_times, naive_remaining_charge, node_only_times,
 
     plt.title("Used Battery Charge (mAh)", fontsize=16)
     plt.xlabel("Time (minutes)", fontsize=12)
-    plt.ylabel("Battery charge Usage (mAh)", fontsize=12)
+    plt.ylabel("Battery Charge Usage (mAh)", fontsize=12)
     # plt.legend(loc="right", fancybox=True, bbox_to_anchor=(1.2, 0.5),
     #           shadow=True, prop={'size':12})
     plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15),

@@ -14,5 +14,5 @@ venv
 # CSV files
 /csv/River_Levels_and_Flows.csv
 
-# Ouput dir
+# Output dir
 /output
