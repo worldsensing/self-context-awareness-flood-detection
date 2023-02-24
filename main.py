@@ -31,6 +31,7 @@ if __name__ == "__main__":
     df_node = data_preparation.prepare_time_and_timenew_column(df_node)
 
     print("Initial Visualizations...")
+    data_visualization.test_display_initial_values(df_node, show=False)
     data_visualization.test_display_correlation_flow_level(df_node, show=False)
     data_visualization.test_display_water_level_with_thresholds(df_node, show=False)
     data_visualization.test_display_flow(df_node, show=False)

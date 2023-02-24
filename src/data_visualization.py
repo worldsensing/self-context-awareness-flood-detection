@@ -7,6 +7,18 @@ from src.data_model import Node
 from src.utils import file_utils
 
 
+def test_display_initial_values(df_node, show=False):
+    plt.figure(1)
+    plt.plot(df_node['TimeNew'], df_node['Level'], "b-", label="Level (m)")
+    plt.plot(df_node['TimeNew'], df_node['Flow'], "g-", label="Flow (cms)")
+    plt.legend(loc="upper right")
+    plt.xticks(rotation=45)
+    plt.xlabel("Timestamp")
+    plt.plot()
+    file_utils.save_plot(plt, "test_display_initial_values")
+    file_utils.show_plot(plt, show=show)
+
+
 def test_display_correlation_flow_level(df_node, show=False):
     plt.figure(1)
     ax = sns.violinplot(x=df_node['Level'])
