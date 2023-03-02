@@ -1,18 +1,27 @@
 import matplotlib.dates as mdates
 import numpy as np
 import seaborn as sns
-from matplotlib import pyplot as plt
+from matplotlib import pyplot as plt, gridspec
 
 from src.data_model import Node
 from src.utils import file_utils
 
 
 def test_display_initial_values(df_node, show=False):
-    plt.figure(1)
-    plt.plot(df_node['TimeNew'], df_node['Level'], "b-", label="Level (m)")
-    plt.plot(df_node['TimeNew'], df_node['Flow'], "g-", label="Flow (cms)")
-    plt.legend(loc="upper right")
-    plt.xticks(rotation=45)
+    gs = gridspec.GridSpec(2, 1)
+    fig = plt.figure()
+
+    ax = fig.add_subplot(gs[0])
+    ax.plot(df_node['TimeNew'], df_node['Level'])
+    ax.set_ylabel(r'Level (m)', size=15)
+    plt.tick_params(
+        axis='x',  # changes apply to the x-axis
+        labelbottom='off')  # labels along the bottom edge are off
+
+    ax = fig.add_subplot(gs[1], sharex=ax)
+    ax.plot(df_node['TimeNew'], df_node['Flow'])
+    ax.set_ylabel(r'Flow (cms)', size=15)
+
     plt.xlabel("Timestamp")
     plt.plot()
     file_utils.save_plot(plt, "test_display_initial_values")
