@@ -72,10 +72,13 @@ def test_linear_regression(df_node, show=False):
     y = df_node['Level'].to_numpy()[START_VALUE:END_VALUE].reshape(-1, 1)
     preds = node_model.predict(x)
 
+    time_y = np.arange(len(y)) * 5 / (60 * 24)  # Sampling rate is 5min, time is in days.
+    time_preds = np.arange(len(x)) * 5 / (60 * 24)
+
     plt.figure(figsize=(10, 8))
-    plt.plot(y, label="Water Level (m)")
-    plt.plot(preds, label="Predicted Water Level (m)")
-    plt.xlabel("Sample Number", fontsize=18)
+    plt.plot(time_y, y, label="Water Level (m)")
+    plt.plot(time_preds, preds, label="Predicted Water Level (m)")
+    plt.xlabel("Monitoring Time (days)", fontsize=18)
     plt.ylabel("Water Level (m)", fontsize=18)
     plt.axhline(y=WATER_LEVEL_THRESHOLD_ON, color='r', linestyle='-', label="Threshold - ON")
     plt.axhline(y=WATER_LEVEL_THRESHOLD_OFF, color='g', linestyle='-', label="Threshold - OFF")
