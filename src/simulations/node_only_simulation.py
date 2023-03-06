@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
 from src.utils import file_utils
+import numpy as np
 
 
 def node_only_simulation(df_node, show=False):
@@ -20,9 +21,9 @@ def node_only_simulation(df_node, show=False):
             sampling_rate = 5 * 2
             transmission_thres = 5 * 3
             _prev_event = True
-        elif p < nd.threshold_off:  # high level
-            sampling_rate = 5 * 12  # 15min
-            transmission_thres = 5 * 18  # 30min
+        elif p < nd.threshold_off:
+            sampling_rate = 5 * 12
+            transmission_thres = 5 * 18
         else:
             sampling_rate = 5 * 2
             transmission_thres = 5 * 3
@@ -74,38 +75,37 @@ def node_only_simulation(df_node, show=False):
             node_only_remaining_charge.append(node_only_node.battery_charge_remaining)
             sampling_rate, transmission, reception = get_sampling_rate(node_only_node, p, l)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
+    node_only_time_days = np.array(node_only_times) / (60 * 24)
     plt.figure()
-    plt.title("Node-Only Samples")
-    plt.plot(node_only_samples, '.')
-    file_utils.save_plot(plt, "node_only__samples")
+    plt.title("Self-Aware Samples")
+    plt.plot(node_only_time_days, node_only_samples, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "self__samples")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Node-Only Predictions")
-    plt.plot(node_only_predictions, '.')
-    file_utils.save_plot(plt, "node_only__predictions")
+    plt.title("Self-Aware Predictions")
+    plt.plot(node_only_time_days, node_only_predictions, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Predicted Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "self__predictions")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Node-Only Levels")
-    plt.plot(node_only_levels, '.')
-    file_utils.save_plot(plt, "node_only__levels")
+    plt.title("Self-Aware Levels")
+    plt.plot(node_only_time_days, node_only_levels, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
+    file_utils.save_plot(plt, "self__levels")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in Y axis?
     plt.figure()
-    plt.title("Node-Only Remaining Charge")
+    plt.title("Self-Aware Remaining Battery Charge")
+    plt.xlabel("Monitoring Time (days)")
     plt.ylabel("Remaining Battery Charge (mAh)")
-    plt.plot(node_only_remaining_charge)
-    file_utils.save_plot(plt, "node_only__remaining_charge")
+    plt.plot(node_only_time_days, node_only_remaining_charge[1:])
+    file_utils.save_plot(plt, "self__remaining_charge")
     file_utils.show_plot(plt, show=show)
-
-    # TODO We do not show here full simulation for node_only?
 
     return node_only_node, node_only_times, node_only_remaining_charge

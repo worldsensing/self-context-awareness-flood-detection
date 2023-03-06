@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 
 from src.data_model.Node import Node
 from src.utils import file_utils
+import numpy as np
 
 
 def naive_simulation(df_node, show=False):
@@ -29,56 +30,30 @@ def naive_simulation(df_node, show=False):
             naive_remaining_charge.append(naive_node.battery_charge_remaining)
             naive_times.append(dt)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
+    naive_time_days = np.array(naive_times) / (60 * 24)
+    
     plt.figure()
     plt.title("Naive Samples")
-    plt.plot(naive_samples, '.')
+    plt.plot(naive_time_days, naive_samples, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
     file_utils.save_plot(plt, "naive_simulation__samples")
     file_utils.show_plot(plt, show=show)
 
-    # TODO Fix what is shown in X axis?
-    # TODO Fix what is shown in Y axis?
     plt.figure()
     plt.title("Naive Predictions")
-    plt.plot(naive_predictions, '.')
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Predicted Water Level (m)", fontsize=16)
+    plt.plot(naive_time_days, naive_predictions, '.')
     file_utils.save_plot(plt, "naive_simulation__predictions")
     file_utils.show_plot(plt, show=show)
 
-    # TODO We do not show here Levels?
-
-    # TODO Fix what is shown in X axis?
     plt.figure()
-    plt.title("Naive Remaining Charge")
+    plt.title("Naive Remaining Battery Charge")
+    plt.xlabel("Monitoring Time (days)")
     plt.ylabel("Remaining Battery Charge (mAh)")
-    plt.plot(naive_remaining_charge)
+    plt.plot(naive_time_days, naive_remaining_charge[1:])
     file_utils.save_plot(plt, "naive_simulation__remaining_charge")
-    file_utils.show_plot(plt, show=show)
-
-    # TODO Fix X labels for Sample Number instead of 0 to 1
-    plt.figure(figsize=(10, 8))
-
-    plt.plot(naive_times, naive_levels, 'k')
-    plt.xlabel("Sample Number", fontsize=16)
-    plt.ylabel("Water Level (m)", fontsize=16)
-    plt.axhline(y=naive_node.threshold_on, color='r', linestyle='-', label="Threshold - ON")
-    plt.axhline(y=naive_node.threshold_off, color='g', linestyle='-', label="Threshold - OFF")
-
-    add_item_flood_starts_in_legend = True
-    add_item_flood_ends_in_legend = True
-    for i in range(len(naive_node.events)):
-        if 'started' == naive_node.event_meaning[i]:
-            plt.axvline(x=naive_node.events[i], color='b', linestyle='-',
-                        label="Flood starts" if add_item_flood_starts_in_legend else "")
-            add_item_flood_starts_in_legend = False
-        else:
-            plt.axvline(x=naive_node.events[i], color='b', linestyle='--',
-                        label="Flood ends" if add_item_flood_ends_in_legend else "")
-            add_item_flood_ends_in_legend = False
-    plt.legend()
-    plt.title("Naive Simulation", fontsize=18)
-
-    file_utils.save_plot(plt, "naive_simulation")
     file_utils.show_plot(plt, show=show)
 
     return naive_node, naive_times, naive_remaining_charge
