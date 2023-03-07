@@ -19,14 +19,14 @@ def node_only_simulation(df_node, show=False):
         in_event = nd.in_event
         if in_event:  # a Flood event is active
             sampling_rate = 5 * 2
-            transmission_thres = 5 * 3
+            transmission_thres = 5 * 4
             _prev_event = True
         elif p < nd.threshold_off:
             sampling_rate = 5 * 12
             transmission_thres = 5 * 18
         else:
             sampling_rate = 5 * 2
-            transmission_thres = 5 * 3
+            transmission_thres = 5 * 4
 
         if (not in_event and p >= nd.threshold_on) or (in_event and p < nd.threshold_off):
             trans = True

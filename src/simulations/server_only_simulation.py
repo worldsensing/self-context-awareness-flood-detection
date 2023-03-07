@@ -16,11 +16,11 @@ def server_only_simulation(df_node, show=False):
         recep = False
         in_event = nd.in_event
         if in_event:  # a Flood event is active
-            sampling_rate = 5 * 3
-        elif level < nd.threshold_on:
-            sampling_rate = 5 * 18
+            sampling_rate = 5 * 7
+        elif level < nd.threshold_off:
+            sampling_rate = 5 * 12
         else:
-            sampling_rate = 5 * 3
+            sampling_rate = 5 * 7
 
         if sampling_rate != _prev_sampling_rate:
             recep = True
