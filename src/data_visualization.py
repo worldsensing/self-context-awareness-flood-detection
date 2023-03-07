@@ -11,15 +11,20 @@ def test_display_initial_values(df_node, show=False):
     gs = gridspec.GridSpec(2, 1)
     fig = plt.figure()
 
+    # 138623 means first value in 2017
+    time_new_np = df_node['TimeNew'].to_numpy()[150000:]
+    level_np = df_node['Level'].to_numpy()[150000:]
+    flow_np = df_node['Flow'].to_numpy()[150000:]
+
     ax = fig.add_subplot(gs[0])
-    ax.plot(df_node['TimeNew'], df_node['Level'])
+    ax.plot(time_new_np, level_np, "b-")
     ax.set_ylabel(r'Level (m)', size=15)
     plt.tick_params(
         axis='x',  # changes apply to the x-axis
         labelbottom='off')  # labels along the bottom edge are off
 
     ax = fig.add_subplot(gs[1], sharex=ax)
-    ax.plot(df_node['TimeNew'], df_node['Flow'])
+    ax.plot(time_new_np, flow_np, "g-")
     ax.set_ylabel(r'Flow (cms)', size=15)
 
     plt.xlabel("Timestamp")
