@@ -96,15 +96,16 @@ def test_linear_regression(df_node, show=False):
     time_y = np.arange(len(y)) * 5 / (60 * 24)  # Sampling rate is 5min, time is in days.
     time_preds = np.arange(len(x)) * 5 / (60 * 24)
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(12, 5))
     plt.plot(time_y, y, label="Water Level (m)")
     plt.plot(time_preds, preds, label="Predicted Water Level (m)")
-    plt.xlabel("Monitoring Time (days)", fontsize=18)
-    plt.ylabel("Water Level (m)", fontsize=18)
+    plt.xlabel("Monitoring Time (days)", fontsize=16)
+    plt.ylabel("Water Level (m)", fontsize=16)
     plt.axhline(y=WATER_LEVEL_THRESHOLD_ON, color='r', linestyle='-', label="Threshold - ON")
     plt.axhline(y=WATER_LEVEL_THRESHOLD_OFF, color='g', linestyle='-', label="Threshold - OFF")
-    plt.legend()
-    plt.title("Linear Regression", fontsize=20)
+    plt.legend(loc="upper left", prop={'size': 14}, facecolor='white', framealpha=0.9)
+    plt.title("Linear Regression", fontsize=18)
+    plt.tick_params(axis='both', labelsize=14)
 
     file_utils.save_plot(plt, "test_linear_regression")
     file_utils.show_plot(plt, show=show)
@@ -166,12 +167,13 @@ def flood_events(df_node, show=False):
             event_node.end_sample_event(True, False, 5, l)
 
     event_time_days = np.array(event_times) / (60 * 24)
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(12, 5))
     plt.plot(event_time_days, event_levels, 'k')
     plt.xlabel("Monitoring Time (days)", fontsize=16)
     plt.ylabel("Water Level (m)", fontsize=16)
     plt.axhline(y=event_node.threshold_on, color='r', linestyle='-', label="Threshold - ON")
     plt.axhline(y=event_node.threshold_off, color='g', linestyle='-', label="Threshold - OFF")
+    plt.tick_params(axis='both', labelsize=14)
 
     add_item_flood_starts_in_legend = True
     add_item_flood_ends_in_legend = True
@@ -184,7 +186,7 @@ def flood_events(df_node, show=False):
             plt.axvline(x=event_node.events[i] / (60 * 24), color='b', linestyle='--',
                         label="Flood ends" if add_item_flood_ends_in_legend else "")
             add_item_flood_ends_in_legend = False
-    plt.legend()
+    plt.legend(loc="upper left", prop={'size': 14}, facecolor='white', framealpha=0.9)
     plt.title("Flood Events", fontsize=18)
 
     file_utils.save_plot(plt, "flood_events")
@@ -207,25 +209,29 @@ def charge_usage(naive_times, naive_remaining_charge, node_only_times,
     server_only_used_charge = battery_charge - np.array(server_only_remaining_charge)
     complete_used_charge = battery_charge - np.array(complete_remaining_charge)
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(12, 5))
 
     colormap = plt.cm.gist_rainbow  # nipy_spectral, Set1,Paired
     plt.gca().set_prop_cycle(plt.cycler('color', plt.cm.jet(np.linspace(0, 1, len(test_names)))))
 
-    plt.plot(naive_times, naive_used_charge[1:], linewidth=2.5, label=test_names[0])
-    plt.plot(node_only_times, node_only_used_charge[1:], linewidth=2.5, label=test_names[1])
-    plt.plot(server_only_times, server_only_used_charge[1:], linewidth=2.5,
-             label=test_names[2])
-    plt.plot(complete_times, complete_used_charge[1:], linewidth=2.5, label=test_names[3])
+    naive_times_days = naive_times / (60 * 24)
+    node_only_times_days = node_only_times / (60 * 24)
+    server_only_times_days = server_only_times / (60 * 24)
+    complete_times_days = complete_times / (60 * 24)
 
-    plt.title("Used Battery Charge (mAh)", fontsize=16)
-    plt.xlabel("Time (minutes)", fontsize=12)
-    plt.ylabel("Battery Charge Usage (mAh)", fontsize=12)
+    plt.plot(naive_times_days, naive_used_charge[1:], linewidth=2.5, label=test_names[0])
+    plt.plot(node_only_times_days, node_only_used_charge[1:], linewidth=2.5, label=test_names[1])
+    plt.plot(server_only_times_days, server_only_used_charge[1:], linewidth=2.5,
+             label=test_names[2])
+    plt.plot(complete_times_days, complete_used_charge[1:], linewidth=2.5, label=test_names[3])
+
+    plt.title("Used Battery Charge (mAh)", fontsize=18)
+    plt.xlabel("Time (days)", fontsize=16)
+    plt.ylabel("Battery Charge Usage (mAh)", fontsize=16)
     # plt.legend(loc="right", fancybox=True, bbox_to_anchor=(1.2, 0.5),
     #           shadow=True, prop={'size':12})
-    plt.legend(loc="upper center", bbox_to_anchor=(0.5, -0.15),
-               fancybox=True, shadow=True, ncol=4, prop={'size': 12})
-    plt.tick_params(axis='both', labelsize=12)
+    plt.legend(loc="upper left", prop={'size': 14}, facecolor='white', framealpha=0.9)
+    plt.tick_params(axis='both', labelsize=14)
     plt.tight_layout()
 
     file_utils.save_plot(plt, "battery_charge_used")
