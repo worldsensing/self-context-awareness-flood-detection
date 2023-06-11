@@ -219,10 +219,10 @@ def charge_usage(naive_times, naive_remaining_charge, node_only_times,
     colormap = plt.cm.gist_rainbow  # nipy_spectral, Set1,Paired
     plt.gca().set_prop_cycle(plt.cycler('color', plt.cm.jet(np.linspace(0, 1, len(test_names)))))
 
-    naive_times_days = naive_times / (60 * 24)
-    node_only_times_days = node_only_times / (60 * 24)
-    server_only_times_days = server_only_times / (60 * 24)
-    complete_times_days = complete_times / (60 * 24)
+    naive_times_days = np.array(naive_times) / (60 * 24)
+    node_only_times_days = np.array(node_only_times) / (60 * 24)
+    server_only_times_days = np.array(server_only_times) / (60 * 24)
+    complete_times_days = np.array(complete_times) / (60 * 24)
 
     plt.plot(naive_times_days, naive_used_charge[1:], linewidth=2.5, label=test_names[0])
     plt.plot(node_only_times_days, node_only_used_charge[1:], linewidth=2.5, label=test_names[1])
